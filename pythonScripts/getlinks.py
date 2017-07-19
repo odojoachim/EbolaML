@@ -1,10 +1,6 @@
 # http://www.who.int/csr/don/archive/disease/ebola/en/ 
 
-from urllib import request
-
-p404 = 'The page or file you are trying to access cannot be found.' #will need this later for the loop
 seed = 'http://www.who.int/csr/don/archive/disease/ebola/en/'
-filename = 'links.txt'
 
 # Process each pair of links and locations
 def getInfo(pair):
@@ -40,3 +36,41 @@ with open('cleanlinks.txt', 'r') as f:
     for p in pairs:
         getInfo(p)
     f.close()
+
+# ---------------------------------------------------
+from urllib import request
+
+p404 = 'The page or file you are trying to access cannot be found.'
+link = info[1]['link']
+filename = 'temp.txt'
+
+with request.urlopen(link) as response:
+    html = str(response.read())
+    if p404 not in html:
+        with open(filename, 'w') as f:
+            f.write(html)
+            f.close()
+
+with open(filename, 'r') as f:
+    page = f.read()
+    startP = page.find('<!-- begin: primary -->')
+    endP = page.find('<!-- end: primary -->')
+    
+    #Narrow down for better search
+    txt = page[startP:endP]
+    sentences = txt.split('.')
+
+    keyTerms = ['deaths', 'suspected cases', 'a case']
+    cases = []
+    
+    #Get the reported cases from the text
+    for s in sentences:
+        if any(kt in s for kt in keyTerms):
+            cases.append(s)
+    
+    #Return only the relevant sentences (should be at least 1)
+    cases = [s for s in cases if 'WHO' in s]
+    for i in range(len(cases)):
+        c = cases[i][::-1]
+        c = c[:c.find('>')]
+        cases[i] = c[::-1]
