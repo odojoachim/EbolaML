@@ -67,7 +67,7 @@ def gatCases(filename, date, place):
         #Get the reported cases from the text
         for s in sentences:
             if any(kt in s for kt in keyTerms):
-                cases.append(s)
+                cases.append(s.replace(',',';'))
         
         #Return only the relevant sentences (should be at least 1)
         # cases = [s for s in cases if 'WHO' in s]
@@ -87,7 +87,14 @@ def gatCases(filename, date, place):
 casesData = []
 filename = 'temp.txt'
 
+# Adding the headers to the file
+with open('final.csv', 'w') as f:
+    s = "'Date','Place','Details'"
+    f.write(s+'\n')
+    f.close()
+
 for i in range(len(info)):
+#for i in range(3):
     date = info[i]['date']
     place = info[i]['place']
     link = info[i]['link']
@@ -99,7 +106,8 @@ for i in range(len(info)):
                 f.write('This link: {} might be a summary\n'.format(link))
                 f.close()
         else:
-            with open('final.txt', 'a') as f:
+            with open('final.csv', 'a') as f:
                 for i in range(len(cases)):
-                    f.write(str(cases[i])+'\n')
+                    s = str(cases[i]).replace('[','').replace(']','')
+                    f.write(s+'\n')
                 f.close()
