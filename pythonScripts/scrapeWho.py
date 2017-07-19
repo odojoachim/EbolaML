@@ -15,10 +15,9 @@ def getInfo(pair):
     date = link[sDate:eDate]
     date = date.replace('/en/index.ht', '')
     
-    place = pairs[1]
-    sPlace = place.find('_info">')+7
-    ePlace = place.find('</span>', sPlace)
-    place = place[sPlace:ePlace].strip()
+    sPlace = pair.find('_info">')+7
+    ePlace = pair.find('</span>', sPlace)
+    place = pair[sPlace:ePlace].strip()
     
     i = {'link':link, 'date':date, 'place':place}
     info.append(i)
@@ -95,7 +94,12 @@ for i in range(len(info)):
     if link != '':
         populateFile(filename, link) #add all html to the file
         cases = gatCases(filename, date, place)
-        if cases != []:
-            casesData.append(cases)
+        if cases == []:
+            with open('links2check.txt', 'a') as f:
+                f.write('This link: {} might be a summary\n'.format(link))
+                f.close()
         else:
-            casesData.append('This link: {} might be a summary'.format(link))
+            with open('final.txt', 'a') as f:
+                for i in range(len(cases)):
+                    f.write(str(cases[i])+'\n')
+                f.close()
