@@ -1,17 +1,18 @@
 # EbolaML
 
 ### African Countries - 
+* Gabon and Republic of the Congo
 * Guinea
-* Sierra Leone
 * Liberia
 * Mali
 * Nigeria
-* Uganda
-* Gabon
 * Senegal
+* Sierra Leone
+* Sudan
+* Uganda
 
 ### Non-African Countries - 
-* UK
 * Italy
-* USA
 * Spain
+* UK
+* USA
